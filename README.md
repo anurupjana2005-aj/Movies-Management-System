@@ -38,8 +38,8 @@ If your MySQL root account has no password, leave `DB_PASSWORD=` blank. Do not s
 
 ## 3. Install and run
 ```bash
-py -m pip install -r requirements.txt
-py app.py
+python3 -m pip install -r requirements.txt
+python3 app.py
 ```
 Open the local address printed in the terminal, normally `http://127.0.0.1:5000`.
 
