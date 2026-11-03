@@ -10,21 +10,28 @@
   <aside class="sidebar">
     <div class="brand"><span class="brand-icon">▶</span><div><b>MovieHub</b><small>ADMIN PANEL</small></div></div>
     <div class="nav-label">WORKSPACE</div>
-    <a class="nav active" href="/">▦ &nbsp; Dashboard</a>
-    <a class="nav" href="#movie-list">▣ &nbsp; Manage Movies</a>
+    <a class="nav {% if not manage_only %}active{% endif %}" href="/">▦ &nbsp; Dashboard</a>
+    <a class="nav {% if manage_only %}active{% endif %}" href="{{ url_for('movies_page') }}">▣ &nbsp; Manage Movies</a>
     <div class="sidebar-bottom"><div class="admin-avatar">A</div><div><b>Administrator</b><small>System Manager</small></div></div>
   </aside>
   <main class="main">
-    <header class="topbar"><div><span class="eyebrow">MOVIE TICKET BOOKING SYSTEM</span><h1>Dashboard</h1></div><div class="profile"><span class="online"></span> Admin</div></header>
+    <header class="topbar"><div><span class="eyebrow">MOVIE TICKET BOOKING SYSTEM</span><h1>{% if manage_only %}Manage Movies{% else %}Dashboard{% endif %}</h1></div><div class="profile"><span class="online"></span> Admin</div></header>
+    <nav class="mobile-nav" aria-label="Mobile navigation">
+      <a class="nav {% if not manage_only %}active{% endif %}" href="/">▦ &nbsp; Dashboard</a>
+      <a class="nav {% if manage_only %}active{% endif %}" href="{{ url_for('movies_page') }}">▣ &nbsp; Manage Movies</a>
+    </nav>
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}{% for category, message in messages %}<div class="alert {{ category }}">{{ message }}</div>{% endfor %}{% endif %}
     {% endwith %}
+    {% if not manage_only %}
     <section class="welcome"><div><span class="eyebrow light">OVERVIEW</span><h2>Welcome back, Admin 👋</h2><p>Manage your movie catalogue from one place.</p></div><div class="welcome-mark">▶</div></section>
     <section class="stats">
       <div class="stat-card"><div class="stat-icon purple">▣</div><div><small>Total Movies</small><strong>{{ stats.total or 0 }}</strong></div></div>
       <div class="stat-card"><div class="stat-icon green">✓</div><div><small>Active Movies</small><strong>{{ stats.active or 0 }}</strong></div></div>
       <div class="stat-card"><div class="stat-icon orange">Ⅱ</div><div><small>Inactive Movies</small><strong>{{ stats.inactive or 0 }}</strong></div></div>
     </section>
+    {% endif %}
+    {% if not manage_only %}
     <section class="panel add-panel">
       <div class="section-heading"><div><span class="eyebrow">CATALOGUE</span><h2>Add New Movie</h2></div><span class="tag">ADMIN ACTION</span></div>
       <form action="/add" method="POST" class="movie-form">
@@ -36,9 +43,10 @@
         <button class="primary-btn" type="submit">＋ Add Movie</button>
       </form>
     </section>
-    <section class="panel" id="movie-list">
+    {% endif %}
+    <section class="panel movie-list-panel" id="movie-list" tabindex="-1">
       <div class="section-heading list-heading"><div><span class="eyebrow">LIBRARY</span><h2>Manage Movies <span class="count">{{ movies|length }}</span></h2></div>
-        <form action="/search" method="GET" class="search"><input name="q" value="{{ search }}" placeholder="Search title or genre..."><button type="submit">⌕</button></form>
+        <form action="/search" method="GET" class="search"><input type="hidden" name="view" value="{% if manage_only %}movies{% endif %}"><input name="q" value="{{ search }}" placeholder="Search title or genre..." aria-label="Search title or genre"><button type="submit" aria-label="Search">⌕</button></form>
       </div>
       <div class="table-wrap"><table><thead><tr><th>MOVIE</th><th>GENRE</th><th>PRICE</th><th>DURATION</th><th>LANGUAGE</th><th>STATUS</th><th>ACTIONS</th></tr></thead><tbody>
       {% for movie in movies %}
@@ -64,5 +72,5 @@
 <label>Movie title<input id="editTitle" name="title" required></label><label>Genre<input id="editGenre" name="genre" required></label>
 <label>Ticket price (₹)<input id="editPrice" name="price" type="number" min="1" step="0.01" required></label><label>Duration (minutes)<input id="editDuration" name="duration" type="number" min="1"></label><label>Language<input id="editLanguage" name="language" required></label>
 <button class="primary-btn" type="submit">Save Changes</button></form></div></div>
-<script src="{{ url_for('static', filename='app.js') }}"></script>
+<script src="{{ url_for('static', filename='app.js', v='2') }}"></script>
 </body></html>

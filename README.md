@@ -43,6 +43,8 @@ python3 app.py
 ```
 Open the local address printed in the terminal, normally `http://127.0.0.1:5000`.
 
+Use `http://127.0.0.1:5000/movies` to open the dedicated **Manage Movies** view.
+
 ## Common problems
 - **Can't connect / Access denied:** check MySQL Server is running and DB_USER / DB_PASSWORD in `.env` match your Workbench connection.
 - **Unknown database:** execute `sql/schema.sql` first.
@@ -66,3 +68,8 @@ Movie_Ticket_Booking_Admin_MySQL/
 ├── requirements.txt
 └── README.md
 ```
+
+# TO run the code
+cd /Users/anurup/Desktop/PL_SQL/Movies_Management_System
+source .venv/bin/activate
+python3 app.py

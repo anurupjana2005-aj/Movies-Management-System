@@ -40,6 +40,13 @@ def call_procedure(name, args):
 
 @app.route("/")
 def index():
+    return dashboard()
+
+@app.route("/movies")
+def movies_page():
+    return dashboard(manage_only=True)
+
+def dashboard(manage_only=False):
     try:
         stats = fetch_all("""
             SELECT COUNT(*) AS total,
@@ -48,13 +55,20 @@ def index():
             FROM movies
         """)[0]
         movies = fetch_all("SELECT * FROM movies ORDER BY movie_id DESC")
-        return render_template("index.html", stats=stats, movies=movies, search="")
+        return render_template(
+            "index.html",
+            stats=stats,
+            movies=movies,
+            search="",
+            manage_only=manage_only
+        )
     except Error as e:
         return render_template("error.html", error=str(e)), 500
 
 @app.route("/search")
 def search():
     term = request.args.get("q", "").strip()
+    manage_only = request.args.get("view") == "movies"
     try:
         movies = fetch_all(
             "SELECT * FROM movies WHERE title LIKE %s OR genre LIKE %s ORDER BY movie_id DESC",
@@ -66,7 +80,13 @@ def search():
                    SUM(status='Inactive') AS inactive
             FROM movies
         """)[0]
-        return render_template("index.html", stats=stats, movies=movies, search=term)
+        return render_template(
+            "index.html",
+            stats=stats,
+            movies=movies,
+            search=term,
+            manage_only=manage_only
+        )
     except Error as e:
         return render_template("error.html", error=str(e)), 500
 
