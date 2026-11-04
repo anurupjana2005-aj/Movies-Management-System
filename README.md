@@ -42,6 +42,7 @@ python3 -m pip install -r requirements.txt
 python3 app.py
 ```
 Open the local address printed in the terminal, normally `http://127.0.0.1:5000`.
+The app also opens automatically in your system's default external browser.
 
 Use `http://127.0.0.1:5000/movies` to open the dedicated **Manage Movies** view.
 

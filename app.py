@@ -1,4 +1,6 @@
 import os
+import threading
+import webbrowser
 from decimal import Decimal
 from flask import Flask, render_template, request, redirect, url_for, flash
 from dotenv import load_dotenv
@@ -139,5 +141,11 @@ def toggle_status(movie_id):
         flash(f"Could not change status: {e}", "danger")
     return redirect(url_for("index"))
 
+def open_browser():
+    webbrowser.open_new("http://127.0.0.1:5000/")
+
+
 if __name__ == "__main__":
+    if not app.debug or os.environ.get("WERKZEUG_RUN_MAIN") == "true":
+        threading.Timer(1.0, open_browser).start()
     app.run(debug=True)
